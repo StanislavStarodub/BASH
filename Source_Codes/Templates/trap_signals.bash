@@ -2,7 +2,16 @@
 
 declare -a SIGS=(SIGINT SIGQUIT SIGHUP)
 declare PROGNAME="${0##*/}"
-declare FILENAME="$(mktemp /tmp/"$PROGNAME".$$.XXXXXXXXX)"
+# declare FILENAME="$(mktemp /tmp/"$PROGNAME".$$.XXXXXXXXX)" # you can write the RANDOM command instead of the nine X characters
+declare FILENAME=""
+
+if [ -d "~/tmp" ]; then
+  TEMP_DIR=~/tmp
+else
+  TEMP_DIR=/tmp
+fi
+FILENAME="$TEMP_DIR/$PROGNAME.$$.$RANDOM"
+
 
 function ON_EXIT()
 {
@@ -35,6 +44,17 @@ done
 trap "signal_exit TERM" TERM HUP
 trap "signal_exit INT"  INT
 
+function error_exit()
+{
+    local error_message="$1"
+    printf "\n%s\n" "${PROGNAME}: ${error_message:-"Unknown Error"}" 1>&2
+    exit 1
+}
+
+function graceful_exit()
+{
+    exit
+}
 
 signal_exit() { # Handle trapped signals
 
