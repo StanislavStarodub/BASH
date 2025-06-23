@@ -27,6 +27,7 @@ unset rc
 
 #Aliases
 
+alias calc='_calc(){ echo | awk "{print $*}"; }; _calc '
 alias oleroot='ssh root@localhost -p12345'
 alias client='ssh StanislavStarodub@localhost -p12345'
 alias server='ssh StanislavStarodub@localhost -p12346'
